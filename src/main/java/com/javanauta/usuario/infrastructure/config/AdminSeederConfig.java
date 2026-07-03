@@ -13,7 +13,7 @@ public class AdminSeederConfig {
     @Bean
     public CommandLineRunner seedAdminUser(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
         return args -> {
-            String emailAdmin = "admin@teste.com";
+            String emailAdmin = "andre.teste.notificacao@gmail.com";
 
             // Regra de idempotência: só cria se não existir
             if (!repository.existsByEmail(emailAdmin)) {
