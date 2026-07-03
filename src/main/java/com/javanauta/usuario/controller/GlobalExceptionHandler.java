@@ -9,12 +9,12 @@ import com.javanauta.usuario.infrastructure.security.dto.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 
-@org.springframework.web.bind.annotation.ControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFound.class)
