@@ -2,10 +2,7 @@ package com.javanauta.usuario.controller;
 
 import com.javanauta.usuario.business.UsuarioService;
 import com.javanauta.usuario.business.ViaCepService;
-import com.javanauta.usuario.business.dto.EnderecoDTO;
-import com.javanauta.usuario.business.dto.TelefoneDTO;
-import com.javanauta.usuario.business.dto.UsuarioDTO;
-import com.javanauta.usuario.business.dto.ViaCepDTO;
+import com.javanauta.usuario.business.dto.*;
 import com.javanauta.usuario.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,8 +21,8 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        return ResponseEntity.ok(usuarioService.salvarUsuario(usuarioDTO));
+    public ResponseEntity<UsuarioResponseDTO> salvarUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        return ResponseEntity.ok(usuarioService.salvarUsuario(usuarioRequestDTO));
     }
 
     @PostMapping("/endereco")
@@ -41,12 +38,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UsuarioDTO usuarioDTO){
-        return ResponseEntity.ok(usuarioService.autenticadorJWT(usuarioDTO));
+    public ResponseEntity<String> login(@RequestBody UsuarioRequestDTO usuarioRequestDTO){
+        return ResponseEntity.ok(usuarioService.autenticadorJWT(usuarioRequestDTO));
     }
 
     @GetMapping
-    public ResponseEntity<UsuarioDTO> buscarEmail(@RequestParam("email") String email){
+    public ResponseEntity<UsuarioResponseDTO> buscarEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(usuarioService.retornarEmail(email));
     }
 
@@ -57,9 +54,9 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<UsuarioDTO> atualizarDadosUsuario(@RequestBody UsuarioDTO usuarioDTO,
+    public ResponseEntity<UsuarioResponseDTO> atualizarDadosUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
                                                             @RequestHeader(name = "Authorization", required = false) String token) {
-        return ResponseEntity.ok(usuarioService.atualizarUsuario(token, usuarioDTO));
+        return ResponseEntity.ok(usuarioService.atualizarUsuario(token, usuarioRequestDTO));
     }
 
     @PutMapping("/endereco")
