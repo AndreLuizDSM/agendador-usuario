@@ -2,7 +2,8 @@ package com.javanauta.usuario.business.converter;
 
 import com.javanauta.usuario.business.dto.EnderecoDTO;
 import com.javanauta.usuario.business.dto.TelefoneDTO;
-import com.javanauta.usuario.business.dto.UsuarioDTO;
+import com.javanauta.usuario.business.dto.UsuarioRequestDTO;
+import com.javanauta.usuario.business.dto.UsuarioResponseDTO;
 import com.javanauta.usuario.infrastructure.entity.Endereco;
 import com.javanauta.usuario.infrastructure.entity.Telefone;
 import com.javanauta.usuario.infrastructure.entity.Usuario;
@@ -20,11 +21,10 @@ import java.util.List;
 public class UsuarioConverter {
 
     // Converter ClasseEntity -> ClasseDTO
-    public UsuarioDTO paraUsuarioDTO(Usuario usuario) {
-        return UsuarioDTO.builder()
+    public UsuarioResponseDTO paraUsuarioResponseDTO(Usuario usuario) {
+        return UsuarioResponseDTO.builder()
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
-                .senha(usuario.getSenha())
                 .enderecos(usuario.getEnderecos() != null ?  paraListaEnderecoDTO(usuario.getEnderecos()) : null)    /*
                 Cada endereco e
                 telefone salvo
@@ -67,28 +67,28 @@ public class UsuarioConverter {
                 .build();
     }
 
-    public UsuarioDTO atualizarUsuarioDTO(Usuario usuarioEntity, UsuarioDTO usuarioDTO){
-        return UsuarioDTO.builder()
-                .nome(usuarioEntity != null ? usuarioEntity.getNome(): usuarioDTO.getSenha())
-                .senha(usuarioEntity != null ? usuarioEntity.getSenha(): usuarioDTO.getSenha())
-                .email(usuarioEntity != null ? usuarioEntity.getEmail(): usuarioDTO.getSenha())
-                .enderecos(usuarioDTO.getEnderecos())
-                .telefones(usuarioDTO.getTelefones())
+    public UsuarioRequestDTO atualizarUsuarioDTO(Usuario usuarioEntity, UsuarioRequestDTO usuarioRequestDTO){
+        return UsuarioRequestDTO.builder()
+                .nome(usuarioEntity != null ? usuarioEntity.getNome(): usuarioRequestDTO.getSenha())
+                .senha(usuarioEntity != null ? usuarioEntity.getSenha(): usuarioRequestDTO.getSenha())
+                .email(usuarioEntity != null ? usuarioEntity.getEmail(): usuarioRequestDTO.getSenha())
+                .enderecos(usuarioRequestDTO.getEnderecos())
+                .telefones(usuarioRequestDTO.getTelefones())
                 .build();
     }
 
     // Converter ClasseDTO -> ClasseEntity
-    public Usuario paraUsuario(UsuarioDTO usuarioDTO) {
+    public Usuario paraUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         return Usuario.builder()
-                .nome(usuarioDTO.getNome())
-                .email(usuarioDTO.getEmail())
-                .senha(usuarioDTO.getSenha())
-                .enderecos(usuarioDTO.getEnderecos() != null ? paraListaEndereco(usuarioDTO.getEnderecos()) : null)    /*
+                .nome(usuarioRequestDTO.getNome())
+                .email(usuarioRequestDTO.getEmail())
+                .senha(usuarioRequestDTO.getSenha())
+                .enderecos(usuarioRequestDTO.getEnderecos() != null ? paraListaEndereco(usuarioRequestDTO.getEnderecos()) : null)    /*
                 Cada endereco e
                 telefone salvo
                 fará o seu build utilizando os metodos abaixo
                 */
-                .telefones(usuarioDTO.getTelefones() != null ? paraListaTelefone(usuarioDTO.getTelefones()) : null)
+                .telefones(usuarioRequestDTO.getTelefones() != null ? paraListaTelefone(usuarioRequestDTO.getTelefones()) : null)
                 .build();
 
         //    Usuario usuario = new Usuario();
@@ -130,11 +130,11 @@ public class UsuarioConverter {
                 .build();
     }
 
-    public Usuario atualizarUsuario(Usuario usuarioEntity, UsuarioDTO usuarioDTO) {
+    public Usuario atualizarUsuario(Usuario usuarioEntity, UsuarioRequestDTO usuarioRequestDTO) {
         return Usuario.builder()
-                .nome(usuarioDTO.getNome() != null ? usuarioDTO.getNome() : usuarioEntity.getNome())
-                .senha(usuarioDTO.getSenha() != null ? usuarioDTO.getSenha() : usuarioEntity.getSenha())
-                .email(usuarioDTO.getEmail() != null ? usuarioDTO.getEmail() : usuarioEntity.getEmail())
+                .nome(usuarioRequestDTO.getNome() != null ? usuarioRequestDTO.getNome() : usuarioEntity.getNome())
+                .senha(usuarioRequestDTO.getSenha() != null ? usuarioRequestDTO.getSenha() : usuarioEntity.getSenha())
+                .email(usuarioRequestDTO.getEmail() != null ? usuarioRequestDTO.getEmail() : usuarioEntity.getEmail())
                 .enderecos(usuarioEntity.getEnderecos())
                 .telefones(usuarioEntity.getTelefones())
                 .id(usuarioEntity.getId())

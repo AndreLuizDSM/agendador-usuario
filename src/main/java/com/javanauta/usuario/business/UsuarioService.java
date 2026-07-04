@@ -4,13 +4,13 @@ package com.javanauta.usuario.business;
 import com.javanauta.usuario.business.converter.UsuarioConverter;
 import com.javanauta.usuario.business.dto.EnderecoDTO;
 import com.javanauta.usuario.business.dto.TelefoneDTO;
-import com.javanauta.usuario.business.dto.UsuarioDTO;
+import com.javanauta.usuario.business.dto.UsuarioRequestDTO;
+import com.javanauta.usuario.business.dto.UsuarioResponseDTO;
 import com.javanauta.usuario.infrastructure.entity.Endereco;
 import com.javanauta.usuario.infrastructure.entity.Telefone;
 import com.javanauta.usuario.infrastructure.entity.Usuario;
 import com.javanauta.usuario.infrastructure.exceptions.ConflictException;
 import com.javanauta.usuario.infrastructure.exceptions.IllegalArgumentException;
-import com.javanauta.usuario.infrastructure.exceptions.ResourceNotFound;
 import com.javanauta.usuario.infrastructure.exceptions.UnauthorizedException;
 import com.javanauta.usuario.infrastructure.repository.EnderecoRepository;
 import com.javanauta.usuario.infrastructure.repository.TelefoneRepository;
@@ -38,21 +38,21 @@ public class UsuarioService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    public UsuarioDTO salvarUsuario (UsuarioDTO usuarioDTO) {   // Recebi um UsuarioDTO
-        existsByEmail(usuarioDTO.getEmail());
+    public UsuarioResponseDTO salvarUsuario (UsuarioRequestDTO usuarioRequestDTO) {   // Recebi um UsuarioDTO
+        existsByEmail(usuarioRequestDTO.getEmail());
 
-        usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        usuarioRequestDTO.setSenha(passwordEncoder.encode(usuarioRequestDTO.getSenha()));
 
-        Usuario usuario = usuarioConverter.paraUsuario(usuarioDTO); //Converti UsuarioDTO para UsuarioEntity
+        Usuario usuario = usuarioConverter.paraUsuario(usuarioRequestDTO); //Converti UsuarioDTO para UsuarioEntity
         usuario = usuarioRepository.save(usuario);  //Salvei no banco de dados o UsuarioEntity
-        return usuarioConverter.paraUsuarioDTO(usuario);    //Converti UsuarioEntity para UsuarioDTO e retornei
+        return usuarioConverter.paraUsuarioResponseDTO(usuario);    //Converti UsuarioEntity para UsuarioDTO e retornei
     }
 
-    public String autenticadorJWT (UsuarioDTO usuarioDTO) {
+    public String autenticadorJWT (UsuarioRequestDTO usuarioRequestDTO) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(),
-                            usuarioDTO.getSenha())
+                    new UsernamePasswordAuthenticationToken(usuarioRequestDTO.getEmail(),
+                            usuarioRequestDTO.getSenha())
             );
             return geradorTokenJWT(authentication);
         } catch (BadCredentialsException | UsernameNotFoundException | AuthorizationDeniedException e) {
@@ -75,10 +75,10 @@ public class UsuarioService {
         }
     }
 
-    public UsuarioDTO retornarEmail(String email){
+    public UsuarioResponseDTO retornarEmail(String email){
         try {
 
-            return usuarioConverter.paraUsuarioDTO
+            return usuarioConverter.paraUsuarioResponseDTO
                 (usuarioRepository.findByEmail(email).orElseThrow(
                 ()-> new ConflictException("Email não encontrado: " + email)));
 
@@ -91,22 +91,22 @@ public class UsuarioService {
         usuarioRepository.deleteByEmail(email);
     }
 
-    public UsuarioDTO atualizarUsuario (String token, UsuarioDTO usuarioDTO) {
+    public UsuarioResponseDTO atualizarUsuario (String token, UsuarioRequestDTO usuarioRequestDTO) {
         //Buscar o email através do token (tirar a obrigatoriedade do email)
         String email = extracaoEmail(token);
         //Se tiver uma nova senha, fazer encriptografia
-        usuarioDTO.setSenha(usuarioDTO.getSenha() != null
-                ? passwordEncoder.encode(usuarioDTO.getSenha()) : null);
+        usuarioRequestDTO.setSenha(usuarioRequestDTO.getSenha() != null
+                ? passwordEncoder.encode(usuarioRequestDTO.getSenha()) : null);
 
         //Buscar os dados do usuário no banco de dados
         Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(
-                ()-> new RuntimeException("Email não encontrado " + usuarioDTO.getEmail()) );
+                ()-> new RuntimeException("Email não encontrado " + usuarioRequestDTO.getEmail()) );
         //usuarioEntity.setEmail(usuarioDTO.getEmail());
         //Mesclou os dados que recebeu na requisição DTO e atualizou o que foi passado no banco de dados
-        Usuario usuario = usuarioConverter.atualizarUsuario(usuarioEntity ,usuarioDTO);
+        Usuario usuario = usuarioConverter.atualizarUsuario(usuarioEntity , usuarioRequestDTO);
         //Salvou o que foi convertido e depois converteu usuario para usuarioDTO, tendo o retorno.
         usuarioRepository.save(usuario);
-            return usuarioConverter.paraUsuarioDTO(usuario);
+            return usuarioConverter.paraUsuarioResponseDTO(usuario);
     }
 
     public EnderecoDTO atualizaEndereco(Long idEndereco, EnderecoDTO enderecoDTO) {
