@@ -82,4 +82,11 @@ public class UsuarioController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/endereco")
+    public ResponseEntity<Void> deletarEndereco(@RequestParam("id") Long id) {
+        usuarioService.deletarEndereco(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

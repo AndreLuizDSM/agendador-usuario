@@ -11,6 +11,7 @@ import com.javanauta.usuario.infrastructure.entity.Telefone;
 import com.javanauta.usuario.infrastructure.entity.Usuario;
 import com.javanauta.usuario.infrastructure.exceptions.ConflictException;
 import com.javanauta.usuario.infrastructure.exceptions.IllegalArgumentException;
+import com.javanauta.usuario.infrastructure.exceptions.ResourceNotFound;
 import com.javanauta.usuario.infrastructure.exceptions.UnauthorizedException;
 import com.javanauta.usuario.infrastructure.repository.EnderecoRepository;
 import com.javanauta.usuario.infrastructure.repository.TelefoneRepository;
@@ -162,7 +163,19 @@ public class UsuarioService {
 
     public void deletarTelefone (Long id) {
 
-        telefoneRepository.deleteById(id);
+        telefoneRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFound("Telefone nao encontrado"));
+
+       telefoneRepository.deleteById(id);
+
+    }
+
+    public void deletarEndereco (Long id) {
+
+        enderecoRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFound("Endereco nao encontrado"));
+
+        enderecoRepository.deleteById(id);
 
     }
 }
