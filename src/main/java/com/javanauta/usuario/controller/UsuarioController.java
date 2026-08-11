@@ -77,15 +77,17 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/telefone")
-    public ResponseEntity<Void> deletarTelefone(@RequestParam("id") Long id) {
-        usuarioService.deletarTelefone(id);
+    public ResponseEntity<Void> deletarTelefone(@RequestParam("id") Long id,
+                                                @RequestHeader(name = "Authorization", required = false)String token) {
+        usuarioService.deletarTelefone(id, token);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/endereco")
-    public ResponseEntity<Void> deletarEndereco(@RequestParam("id") Long id) {
-        usuarioService.deletarEndereco(id);
+    public ResponseEntity<Void> deletarEndereco(@RequestParam("id") Long id,
+                                                @RequestHeader(name = "Authorization", required = false)String token) {
+        usuarioService.deletarEndereco(id, token);
 
         return ResponseEntity.noContent().build();
     }

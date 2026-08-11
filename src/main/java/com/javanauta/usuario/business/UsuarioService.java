@@ -27,6 +27,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -161,21 +163,37 @@ public class UsuarioService {
     }
 
 
-    public void deletarTelefone (Long id) {
+    public void deletarTelefone (Long id, String token) {
 
-        telefoneRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFound("Telefone nao encontrado"));
+        String email = extracaoEmail(token);
 
-       telefoneRepository.deleteById(id);
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new ResourceNotFound("Email não encontrado " + email)
+        );
+
+
+        int linhasAfetadas = telefoneRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (linhasAfetadas == 0) {
+            throw new ResourceNotFound("Telefone não encontrado ou não pertence ao usuário");
+        }
 
     }
 
-    public void deletarEndereco (Long id) {
+    public void deletarEndereco (Long id, String token) {
 
-        enderecoRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFound("Endereco nao encontrado"));
+        String email = extracaoEmail(token);
 
-        enderecoRepository.deleteById(id);
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new ResourceNotFound("Email não encontrado " + email)
+        );
+
+
+        int linhasAfetadas = enderecoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (linhasAfetadas == 0) {
+            throw new ResourceNotFound("Endereço não encontrado ou não pertence ao usuário");
+        }
+
+
 
     }
 }
