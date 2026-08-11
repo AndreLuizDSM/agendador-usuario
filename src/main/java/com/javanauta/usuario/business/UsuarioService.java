@@ -158,4 +158,11 @@ public class UsuarioService {
     private String extracaoEmail (String token) {
         return jwtUtil.extrairEmailToken(token.substring(7));
     }
+
+
+    public void deletarTelefone (Long id) {
+
+        telefoneRepository.deleteById(id);
+
+    }
 }
