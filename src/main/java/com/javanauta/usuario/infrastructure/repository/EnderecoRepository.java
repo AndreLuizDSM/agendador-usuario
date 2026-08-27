@@ -1,8 +1,11 @@
 package com.javanauta.usuario.infrastructure.repository;
 
 import com.javanauta.usuario.infrastructure.entity.Endereco;
+import com.javanauta.usuario.infrastructure.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 //Uma interface Repository para cada Entity
 //O que colocar dentro do "< >" = Nome do entity, Tipo do ID
@@ -11,4 +14,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
+
+    @Modifying
+    @Transactional
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

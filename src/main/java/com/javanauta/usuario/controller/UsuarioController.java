@@ -75,4 +75,20 @@ public class UsuarioController {
     public ResponseEntity<ViaCepDTO> buscarCep(@PathVariable("cep") String cep) {
         return ResponseEntity.ok(cepService.buscaCep(cep));
     }
+
+    @DeleteMapping("/telefone")
+    public ResponseEntity<Void> deletarTelefone(@RequestParam("id") Long id,
+                                                @RequestHeader(name = "Authorization", required = false)String token) {
+        usuarioService.deletarTelefone(id, token);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/endereco")
+    public ResponseEntity<Void> deletarEndereco(@RequestParam("id") Long id,
+                                                @RequestHeader(name = "Authorization", required = false)String token) {
+        usuarioService.deletarEndereco(id, token);
+
+        return ResponseEntity.noContent().build();
+    }
 }

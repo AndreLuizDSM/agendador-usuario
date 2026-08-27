@@ -11,6 +11,7 @@ import com.javanauta.usuario.infrastructure.entity.Telefone;
 import com.javanauta.usuario.infrastructure.entity.Usuario;
 import com.javanauta.usuario.infrastructure.exceptions.ConflictException;
 import com.javanauta.usuario.infrastructure.exceptions.IllegalArgumentException;
+import com.javanauta.usuario.infrastructure.exceptions.ResourceNotFound;
 import com.javanauta.usuario.infrastructure.exceptions.UnauthorizedException;
 import com.javanauta.usuario.infrastructure.repository.EnderecoRepository;
 import com.javanauta.usuario.infrastructure.repository.TelefoneRepository;
@@ -157,5 +158,40 @@ public class UsuarioService {
 
     private String extracaoEmail (String token) {
         return jwtUtil.extrairEmailToken(token.substring(7));
+    }
+
+
+    public void deletarTelefone (Long id, String token) {
+
+        String email = extracaoEmail(token);
+
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new ResourceNotFound("Email não encontrado " + email)
+        );
+
+
+        int linhasAfetadas = telefoneRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (linhasAfetadas == 0) {
+            throw new ResourceNotFound("Telefone não encontrado ou não pertence ao usuário");
+        }
+
+    }
+
+    public void deletarEndereco (Long id, String token) {
+
+        String email = extracaoEmail(token);
+
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                ()-> new ResourceNotFound("Email não encontrado " + email)
+        );
+
+
+        int linhasAfetadas = enderecoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (linhasAfetadas == 0) {
+            throw new ResourceNotFound("Endereço não encontrado ou não pertence ao usuário");
+        }
+
+
+
     }
 }
