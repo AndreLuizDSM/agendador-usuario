@@ -3,6 +3,7 @@ package com.javanauta.usuario.business;
 import com.javanauta.usuario.business.dto.ViaCepDTO;
 import com.javanauta.usuario.infrastructure.clients.ViaCepClient;
 import com.javanauta.usuario.infrastructure.exceptions.IllegalArgumentException;
+import com.javanauta.usuario.infrastructure.exceptions.ResourceNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class ViaCepService {
 
     private void existeCep(ViaCepDTO cepDTO){
         if (cepDTO.cep() == null){
-            throw new IllegalArgumentException("Cep não existe");
+            throw new ResourceNotFound("Cep não existe");
         }
     }
 
