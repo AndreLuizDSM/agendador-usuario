@@ -7,6 +7,7 @@ import com.javanauta.usuario.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Usuário", description = "Cadastro e login de usuários")
 @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
+@Slf4j
 public class UsuarioController {
 
     private final ViaCepService cepService;
@@ -22,6 +24,10 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> salvarUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        // log.info() sempre aparece;
+        // log.debug() apenas em modo debug;
+        // log.error() apenas em exceptions;
+
         return ResponseEntity.ok(usuarioService.salvarUsuario(usuarioRequestDTO));
     }
 
@@ -73,6 +79,8 @@ public class UsuarioController {
 
     @GetMapping("/endereco/{cep}/")
     public ResponseEntity<ViaCepDTO> buscarCep(@PathVariable("cep") String cep) {
+
+        log.debug("iniciando busca pelo cep {}" , cep);
         return ResponseEntity.ok(cepService.buscaCep(cep));
     }
 
